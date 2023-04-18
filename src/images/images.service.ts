@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {  ImageDto } from './dto/create-image.dto';
+import {  BlogDto } from './dto/create-image.dto';
 import { Image } from './interfaces/image.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -9,7 +9,7 @@ export class ImagesService {
   constructor(@InjectModel('Image') private readonly imageModel: Model<Image>) {
 
   }
-  async createImage(imageDto: ImageDto): Promise<Image>{
+  async createImage(imageDto: BlogDto): Promise<Image>{
     const NewImage =  new this.imageModel(imageDto);
     return await NewImage.save();
   }
@@ -30,7 +30,7 @@ export class ImagesService {
     return deleteImage;
   }
 
-  async updateImage(imageID: string, imageDto: ImageDto): Promise<Image>{
+  async updateImage(imageID: string, imageDto: BlogDto): Promise<Image>{
     const updateBlog = await this.imageModel.findByIdAndUpdate(imageID, imageDto, {new:true});
     return updateBlog;
   }

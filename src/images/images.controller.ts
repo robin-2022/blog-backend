@@ -2,11 +2,12 @@ import { Controller, Get, Post, Body, Put, Param, Req, Res, UploadedFile, HttpSt
 import { ImagesService } from './images.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { ImageDto } from './dto/create-image.dto';
+import { BlogDto } from './dto/create-image.dto';
 import { fileFilter, renameImage } from './helpers/images.helper';
+import { ApiTags } from '@nestjs/swagger';
 
-
-@Controller('images')
+@ApiTags('Blog')
+@Controller('blog')
 export class ImagesController {
   constructor(private readonly imagesService: ImagesService) {}
 
@@ -19,10 +20,10 @@ export class ImagesController {
       fileFilter: fileFilter
     }))
 
-  async uploadImage( @UploadedFile() file: Express.Multer.File,@Req() req,@Res() res,@Body() imageDto: ImageDto,) {
+  async uploadImage( @UploadedFile() file: Express.Multer.File,@Req() req,@Res() res,@Body() imageDto: BlogDto,) {
     const newImage = await this.imagesService.createImage(imageDto);
     return res.status(200).json({
-      message: 'Image uploaded successfully',
+      message: 'Blog register successfully',
       newImage
     });
   }
@@ -35,17 +36,17 @@ export class ImagesController {
         })
     }
 
-    @Get('/:imadeID')
-    async getImagesID(@Res() res, @Param('imadeID') imadeID: string){
-        const imagesID = await this.imagesService.getImagesID(imadeID);
+    @Get('/:blogID')
+    async getImagesID(@Res() res, @Param('blogID') imadeID: string){
+        const blogsID = await this.imagesService.getImagesID(imadeID);
         return res.status(HttpStatus.OK).json({
-            imagesID
+          blogsID
         })
     }
 
-    @Put('/update/:imageID')
-    async updateImage(@Res() res, @Body() imageDto: ImageDto, @Param('imageID') imageID:string){
-        const updateImage = await this.imagesService.updateImage(imageID, imageDto);
+    @Put('/update/:blogID')
+    async updateImage(@Res() res, @Body() blogDto: BlogDto, @Param('blogID') blogID:string){
+        const updateImage = await this.imagesService.updateImage(blogID, blogDto);
         if(!updateImage) throw new NotFoundException('update Product Does Not exists ');
         return res.status(HttpStatus.OK).json({
             message:'Product Updated successfully',
@@ -55,13 +56,13 @@ export class ImagesController {
 
 
 
-  @Delete('/delete/:imageID')
-  async deleteImage(@Res() res, @Param('imageID') imageID: string){
-      const ImageDelete = await this.imagesService.deleteImage(imageID);
-      if(!ImageDelete) throw new NotFoundException('Image do no exist');
+  @Delete('/delete/:blogID')
+  async deleteImage(@Res() res, @Param('blogID') blogID: string){
+      const BlogDelete = await this.imagesService.deleteImage(blogID);
+      if(!BlogDelete) throw new NotFoundException('Image do no exist');
       return res.status(HttpStatus.OK).json({
           message:'Image Deleted succesfully',
-          ImageDelete
+          BlogDelete
       })
     }
   }
